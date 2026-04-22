@@ -7,10 +7,10 @@ import {
 } from "@opentui/core";
 import { readHomeDirectory } from "./filemanagement.service";
 
-export type FileTab = "files" | "hidden";
+export type fileTabs = "files" | "hidden";
 
 type FileManagementUIOptions = {
-  activeTab: FileTab;
+  activeTab: fileTabs;
 };
 
 function tabButton(label: string, isActive: boolean) {

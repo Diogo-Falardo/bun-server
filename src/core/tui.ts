@@ -1,49 +1,48 @@
-import { Box, ConsolePosition, createCliRenderer, Text } from "@opentui/core";
+import { Box, ConsolePosition, createCliRenderer } from "@opentui/core";
 import { machineUI } from "../machine/machine.ui";
-import {
-  fileManagementUI,
-  type FileTab,
-} from "../file-management/filemanagement.ui";
-import { keyboard } from "../utils/keyboard";
+import { fileManagementUI } from "../file-management/filemanagement.ui";
+import { keyboard, useAppTabs } from "../utils/keyboard";
 
 export const renderer = await createCliRenderer({
   consoleOptions: {
     position: ConsolePosition.BOTTOM,
-    sizePercent: 30,
+    sizePercent: 50,
   },
 });
 
-let activeTab: FileTab = "files";
+const APP_ID = "app-root";
+let hasMountedApp = false;
 
 async function renderApp() {
-  renderer.root.add(
-    Box(
-      {
-        width: "100%",
-        height: "100%",
-        flexDirection: "column",
-        gap: 0,
-        padding: 0,
-        backgroundColor: "#343a40",
-      },
-      machineUI(),
-      await fileManagementUI({ activeTab }),
-    ),
+  const { activeFileTab } = useAppTabs.getState();
+
+  const nextNode = Box(
+    {
+      id: APP_ID,
+      width: "100%",
+      height: "100%",
+      flexDirection: "column",
+      gap: 0,
+      padding: 0,
+      backgroundColor: "#343a40",
+    },
+    machineUI(),
+    await fileManagementUI({ activeTab: activeFileTab }),
   );
+
+  if (hasMountedApp) {
+    renderer.root.remove(APP_ID); // remove expects string id
+  }
+
+  renderer.root.add(nextNode);
+  hasMountedApp = true;
 }
 
 keyboard(renderer);
-console.log("log");
 await renderApp();
 
-renderer.keyInput.on("keypress", (key) => {
-  // Toggle with backtick key
-  if (key.name === "d") {
-    renderer.console.toggle();
-  }
-
-  // Or with a modifier
-  if (key.ctrl && key.name === "l") {
-    renderer.console.toggle();
+useAppTabs.subscribe((state, prevState) => {
+  if (state.activeFileTab !== prevState.activeFileTab) {
+    void renderApp();
   }
 });
