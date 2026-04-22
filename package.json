@@ -1,5 +1,8 @@
 {
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.3.12"
+  },
+  "dependencies": {
+    "@opentui/core": "^0.1.102"
   }
 }
