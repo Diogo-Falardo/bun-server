@@ -1,4 +1,12 @@
 {
+  "name": "bun-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "bun index.js",
+    "test": "bun text.js"
+  },
   "devDependencies": {
     "@types/bun": "^1.3.12"
   },
