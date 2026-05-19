@@ -20,6 +20,8 @@ bun-debug.log*
 .vscode/
 .idea/
 .DS_Store
+skills/
+private_docs/
 
 # Environment files
 .env
